@@ -1,28 +1,60 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="app">
+
+    <TodoForm
+      @add-item="addItem"
+    />
+
+    <TodoList 
+      :list="list"
+      @remove-item="removeItem"
+    />
+
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import data
+import * as store from './data.js';
+// import components
+import TodoList from './components/TodoList';
+import TodoForm from './components/TodoForm';
 
 export default {
   name: 'App',
+
   components: {
-    HelloWorld
-  }
+    TodoForm,
+    TodoList,
+  },
+  
+  data () {
+    return {
+      list: store.data.list || [],
+    }
+  },
+
+  methods: {
+    removeItem(id) {
+      this.list = this.list.filter(item => item.id !== id);
+    },
+
+    addItem(newItem) {
+      if (newItem !== null) {
+        this.list = [...this.list.reverse(), newItem].reverse();
+      }
+    },
+  },
+
+  // mounted() {
+  //   console.debug('test mounted method')
+  // },
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+.app {
+  height: 100vh;
+  padding: 0 3rem;
 }
 </style>
