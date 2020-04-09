@@ -24,11 +24,20 @@
         </TodoButton>
       </div>
     </form>
+
+    <Notification
+      v-show="notification.show"
+      :class="notification.class"
+    >
+      {{ notification.message }}
+    </Notification>
+
   </section>
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
+import Notification from './TodoNotification'
 import TodoButton from './TodoButton'
 
 export default {
@@ -36,12 +45,18 @@ export default {
 
   components: {
     TodoButton,
+    Notification,
   },
 
   data() {
     return {
       inputValue: '',
       inputClass: '',
+      notification: {
+        show: false,
+        message: '',
+        class: 'is-warning',
+      }
     }
   },
 
@@ -56,6 +71,8 @@ export default {
           title: this.inputValue,
           completed: false
         };
+        
+        this.notification.show = false;
       } else {
         this.validation(this.inputValue);
         this.inputClass = 'is-danger';
@@ -72,11 +89,17 @@ export default {
 
     validation(value) {
       if (value === '') {
-        console.debug('[debug] empty value');
+        // console.debug('[debug] empty value');
+        this.notification.show = true;
+        this.notification.class = 'is-danger';
+        this.notification.message = 'Todo Item can`t be empty!';
         return;
       }
       if (value.length < 3) {
-        console.debug('[debug] too small text');
+        // console.debug('[debug] too small text');
+        this.notification.show = true;
+        this.notification.class = 'is-warning';
+        this.notification.message = 'Todo Item should not be less than 3 symbols and more than 100 symbols!';
         return;
       }
     }
